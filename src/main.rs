@@ -20,12 +20,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 #[tokio::main]
 async fn get_weather(coordinates: Coordinates) -> Result<Weather, Box<dyn std::error::Error>> {
-    let resp = reqwest::get(format!(
+    let url = format!(
         "{0}?latitude={1}&longitude={2}&current=temperature_2m",
         WEATHER_SERVICE_API, coordinates.latitude, coordinates.longitude
-    ))
-    .await?
-    .json::<Weather>()
-    .await?;
+    );
+    let resp: Weather = reqwest::get(url).await?.json::<Weather>().await?;
     Ok(resp)
 }
