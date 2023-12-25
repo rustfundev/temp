@@ -6,9 +6,21 @@ use crate::coordinate::Coordinates;
 
 use clap::Parser;
 
+use serde::{Deserialize, Serialize};
+
 const WEATHER_SERVICE_API: &str = "https://api.open-meteo.com/v1/forecast";
 
-type Weather = serde_json::Value;
+#[derive(Debug, Serialize, Deserialize)]
+struct Current {
+    interval: u32,
+    temperature_2m: f64,
+    time: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct CurrentWeather {
+    current: Current,
+}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
@@ -19,11 +31,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::main]
-async fn get_weather(coordinates: Coordinates) -> Result<Weather, Box<dyn std::error::Error>> {
+async fn get_weather(
+    coordinates: Coordinates,
+) -> Result<CurrentWeather, Box<dyn std::error::Error>> {
     let url = format!(
         "{0}?latitude={1}&longitude={2}&current=temperature_2m",
         WEATHER_SERVICE_API, coordinates.latitude, coordinates.longitude
     );
-    let resp: Weather = reqwest::get(url).await?.json::<Weather>().await?;
-    Ok(resp)
+    let cw: CurrentWeather = reqwest::get(url).await?.json::<CurrentWeather>().await?;
+    Ok(cw)
 }
