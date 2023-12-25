@@ -63,6 +63,6 @@ mod tests {
     #[should_panic]
     fn test_get_weather_panic() {
         let coordinate: Coordinates = Coordinates::new("".to_string(), "".to_string());
-        let _ = get_weather(coordinate);
+        _ = get_weather(coordinate);
     }
 }
