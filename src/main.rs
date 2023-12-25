@@ -34,6 +34,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 async fn get_weather(
     coordinates: Coordinates,
 ) -> Result<CurrentWeather, Box<dyn std::error::Error>> {
+    if coordinates.longitude == "" || coordinates.latitude == "" {
+        panic!("This should never happen");
+    }
+
     let url = format!(
         "{0}?latitude={1}&longitude={2}&current=temperature_2m",
         WEATHER_SERVICE_API, coordinates.latitude, coordinates.longitude
@@ -48,9 +52,17 @@ mod tests {
 
     #[test]
     fn test_get_weather() -> Result<(), Box<dyn std::error::Error>> {
+        // TODO: add mock
         let coordinate: Coordinates = Coordinates::new("10".to_string(), "10".to_string());
         let _weather = get_weather(coordinate)?;
         assert_eq!(_weather.current.interval, 900);
         Ok(())
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_get_weather_panic() {
+        let coordinate: Coordinates = Coordinates::new("".to_string(), "".to_string());
+        let _ = get_weather(coordinate);
     }
 }
