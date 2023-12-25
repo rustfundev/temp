@@ -41,3 +41,16 @@ async fn get_weather(
     let cw: CurrentWeather = reqwest::get(url).await?.json::<CurrentWeather>().await?;
     Ok(cw)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_weather() -> Result<(), Box<dyn std::error::Error>> {
+        let coordinate: Coordinates = Coordinates::new("10".to_string(), "10".to_string());
+        let _weather = get_weather(coordinate)?;
+        assert_eq!(_weather.current.interval, 900);
+        Ok(())
+    }
+}
