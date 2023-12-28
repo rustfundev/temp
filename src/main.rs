@@ -1,5 +1,6 @@
 mod cli;
 mod coordinate;
+mod request;
 
 use crate::cli::Args;
 use crate::coordinate::Coordinates;
