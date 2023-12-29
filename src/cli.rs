@@ -5,9 +5,9 @@ use clap::Parser;
 pub struct Args {
     /// Latitute of the geographic coordinate
     #[arg(short, long)]
-    pub latitude: String,
+    pub latitude: f64,
 
     /// Longitude of the geographic coordinate
     #[arg(short = 'L', long)]
-    pub longitude: String,
+    pub longitude: f64,
 }
